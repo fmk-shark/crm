@@ -32,7 +32,8 @@ public class TransactionInvocationHandler implements InvocationHandler{
 		}catch(Exception e){
 			session.rollback();
 			e.printStackTrace();
-			
+			//获取异常并往上抛  相当于抛给张三1
+			throw e.getCause();
 			//处理的是什么异常，继续往上抛什么异常
 			//throw e.getCause();
 		}finally{

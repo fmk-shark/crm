@@ -7,10 +7,10 @@
   <properties resource="jdbc.properties"/>
   
   <typeAliases>
-  
+
 <package name="com.bjpower.crm.settings.domain"/>
-  	
-  
+
+
   </typeAliases>
   
   <environments default="development">

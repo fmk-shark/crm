@@ -23,6 +23,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			})
 			$("#btn1").click(function (){
 				login();
+
 			})
 
 
@@ -32,7 +33,29 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			let loginpwd = $("#loginpwd").val();
 			if(loginuser == "" || loginpwd == ""){
 				$("#msg").html("账号密码不能为空");
+				return false;
 			}
+			$.ajax({
+				url:"setting/user/save.do",
+				type:"post",
+				data:{
+					loginuser:loginuser,
+					loginpwd:loginpwd
+				},
+				dataType:"json",
+				success:function (data) {
+					if(data.success){
+						alert("登录成功");
+                       window.location.href = "workbench/index.html"
+					}else {
+						$("#msg").html(data.msg);
+						return false;
+					}
+				}
+					}
+					
+			)
+
 		}
 		String.prototype.trim=function(){
 			return this.replace(/(^\s*)|(\s*$)/g, "");
@@ -52,7 +75,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<div class="page-header">
 				<h1>登录</h1>
 			</div>
-			<form action="workbench/index.html" class="form-horizontal" role="form">
+			<form  class="form-horizontal" role="form">
 				<div class="form-group form-group-lg">
 					<div style="width: 350px;" >
 						<input id="loginuser" class="form-control" type="text" placeholder="用户名">

@@ -4,8 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bjpower.crm.settings.dao.UserDao">
-
-
+      <select id="login" resultType="com.bjpower.crm.settings.domain.User" parameterType="map">
+            select * from tbl_user where loginAct = #{loginAct} and loginPwd = #{loginPwd}
+      </select>
 
 </mapper>
 

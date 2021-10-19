@@ -78,8 +78,10 @@
           <include>**/*.xml</include>
         </includes>
         <filtering>false</filtering>
+
       </resource>
     </resources>
   </build>
+
 
 </project>
