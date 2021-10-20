@@ -19,8 +19,45 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <script type="text/javascript">
 
 	$(function(){
-		
-		
+
+		$("#btn1").click(function () {
+			$.ajax({
+						url:"workbench/user/userlist.do",
+						type:"get",
+						dataType:"json",
+						success:function (data) {
+							let html = "<option></option>";
+
+							$.each(data,function (i,n){
+                              html += "<option value='"+n.id+"'>"+n.name+"</option>";
+							})
+							$("#create-marketActivityOwner").html(html);
+							let name1 = "${sessionScope.user.id}";
+							$("#create-marketActivityOwner").val(name1);
+							$("#createActivityModal").modal(true);
+						}
+					}
+
+			)
+		})
+
+		$("#btn2").click(function () {
+			$.ajax({
+						url:"workbench/user/userlist.do",
+						type:"get",
+						dataType:"json",
+						success:function (data) {
+							let html = "<option></option>";
+							$.each(data,function (i,n){
+								html += "<option value='"+n.loginAct+"'>"+n.name+"</option>";
+							})
+							$("#edit-marketActivityOwner").html(html);
+							$("#editActivityModal").modal(true);
+						}
+					}
+
+			)
+		})
 		
 	});
 	
@@ -46,9 +83,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="create-marketActivityOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
 								</select>
 							</div>
                             <label for="create-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
@@ -110,9 +144,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<label for="edit-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="edit-marketActivityOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
 								</select>
 							</div>
                             <label for="edit-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
@@ -207,9 +238,12 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createActivityModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-primary" id="btn1" >
+					  <span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button type="button" class="btn btn-default" id="btn2">
+					  <span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus">
+				  </span> 删除</button>
 				</div>
 				
 			</div>

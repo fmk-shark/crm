@@ -5,10 +5,10 @@ import com.bjpower.crm.settings.domain.User;
 import com.bjpower.crm.settings.service.UserService;
 import com.bjpower.crm.utils.DateTimeUtil;
 import com.bjpower.crm.utils.SqlSessionUtil;
-import org.apache.ibatis.session.SqlSession;
 
 import javax.security.auth.login.LoginException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserServiceImpl implements UserService {
@@ -42,5 +42,10 @@ public class UserServiceImpl implements UserService {
 
 
       return user;
+   }
+
+   public List<User> getUserList() {
+      List<User> userList = userdao.getUserList();
+      return userList;
    }
 }

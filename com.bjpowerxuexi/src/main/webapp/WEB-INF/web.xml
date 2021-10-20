@@ -5,6 +5,18 @@
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
 
+
+<!--
+  add/create 添加/创建操作
+  save 保存操作
+  updata 更新操作
+  edit 编辑操作
+  get 获取操作
+  特殊操作...
+
+
+
+-->
   <filter>
     <filter-name>webfilter</filter-name>
     <filter-class>com.bjpower.crm.web.filter.Encordingfilter</filter-class>
@@ -31,6 +43,15 @@
   <servlet-mapping>
     <servlet-name>UserController</servlet-name>
     <url-pattern>/setting/user/save.do</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>activityController</servlet-name>
+    <servlet-class>com.bjpower.crm.workbench.web.controller.ActivityController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>activityController</servlet-name>
+    <url-pattern>/workbench/user/userlist.do</url-pattern>
   </servlet-mapping>
 
 

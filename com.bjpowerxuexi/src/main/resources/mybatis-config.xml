@@ -8,8 +8,8 @@
   
   <typeAliases>
 
-<package name="com.bjpower.crm.settings.domain"/>
-
+    <package name="com.bjpower.crm.settings.domain"/>
+    <package name="com.bjpower.crm.workbench.domain"/>
 
   </typeAliases>
   
@@ -28,8 +28,10 @@
  
   <mappers>
    
-<package name="com.bjpower.crm.settings.dao"/>
-    
+    <package name="com.bjpower.crm.settings.dao"/>
+    <package name="com.bjpower.crm.workbench.dao"/>
+
+
   </mappers>
 </configuration>
 
