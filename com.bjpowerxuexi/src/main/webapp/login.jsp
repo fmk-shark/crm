@@ -12,6 +12,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		$(function (){
+			if(window.top != window){
+				window.top.location = window.location;
+			}
 			$("#loginuser").val("");
 
 			$("#loginuser").focus();
@@ -46,7 +49,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				success:function (data) {
 					if(data.success){
 						alert("登录成功");
-                       window.location.href = "workbench/index.html"
+                       window.location.href = "workbench/index.jsp";
 					}else {
 						$("#msg").html(data.msg);
 						return false;

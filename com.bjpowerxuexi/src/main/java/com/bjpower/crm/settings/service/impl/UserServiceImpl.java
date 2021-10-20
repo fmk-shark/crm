@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
       //判断失效时间
       String expireTime = user.getExpireTime();
       String currentTime = DateTimeUtil.getSysTime();
-      if(currentTime.compareTo(expireTime)<0){
+      if(expireTime.compareTo(currentTime)<0){
          throw new LoginException("账号已经失效");
       }
       String locktime = user.getLockState();;

@@ -5,6 +5,25 @@
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
 
+  <filter>
+    <filter-name>webfilter</filter-name>
+    <filter-class>com.bjpower.crm.web.filter.Encordingfilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>webfilter</filter-name>
+  <url-pattern>*.do</url-pattern>   <!--   通配符前千万不能加/不然程序运行不了-->
+  </filter-mapping>
+  <filter>
+    <filter-name>loginfilter</filter-name>
+    <filter-class>com.bjpower.crm.web.filter.loginFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>loginfilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+    <url-pattern>*.jsp</url-pattern>   <!--   通配符前千万不能加/不然程序运行不了-->
+  </filter-mapping>
+
+
   <servlet>
     <servlet-name>UserController</servlet-name>
     <servlet-class>com.bjpower.crm.settings.web.controller.UserController</servlet-class>

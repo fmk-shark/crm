@@ -21,8 +21,7 @@ public class UserController extends HttpServlet {
 
         System.out.println("欢迎进入管理员控制台");
         login(req,resp);
-        String s = req.getContextPath();
-        System.out.println(s);
+
 
 
     }
@@ -30,6 +29,7 @@ public class UserController extends HttpServlet {
     protected void login(HttpServletRequest request, HttpServletResponse response){
         String loginuser = request.getParameter("loginuser");
         String loginpwd = request.getParameter("loginpwd");
+        System.out.println(loginuser+"------"+loginpwd);
         loginpwd = MD5Util.getMD5(loginpwd);
         String ip = request.getLocalAddr();
         UserService userService = (UserService) ServiceFactory.getService(new UserServiceImpl());
