@@ -4,7 +4,47 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bjpower.crm.workbench.dao.ActivityDao">
+    <insert id="activitySave" parameterType="com.bjpower.crm.workbench.domain.Activity">
+        insert into tbl_activity(id,owner,name,startDate,endDate,cost,description,createTime,createBy)value(#{id},#{owner},#{name},#{startDate},#{endDate},#{cost},#{description},#{createTime},#{createBy})
+    </insert>
 
+    <select id="getPageCount" resultType="int">
+        select count(*) from tbl_activity
+    </select>
+
+    <select id="getPageUserList" resultType="com.bjpower.crm.workbench.domain.Activity">
+        select
+            a.name ,
+            u.name as owner,
+            a.startDate ,
+            a.endDate
+        from tbl_activity a join tbl_user u on a.owner = u.id
+        <where>
+            <if test="name != null and name != ''">
+                a.name like '%' #{name} '%'
+            </if>
+        </where>
+
+        <where>
+            <if test="owner != null and owner != ''">
+               and a.owner like '%' #{owner} '%'
+            </if>
+        </where>
+
+        <where>
+            <if test="startDate != null and startDate != ''">
+              and  a.startDate &gt; #{startDate}
+            </if>
+        </where>
+
+        <where>
+            <if test="endDate != null and endDate != ''">
+              and  a.endDate &lt; #{endDate}
+            </if>
+        </where>
+        order by a.createTime desc
+        limit #{skipCount},#{pageSize}
+    </select>
 
 </mapper>
 

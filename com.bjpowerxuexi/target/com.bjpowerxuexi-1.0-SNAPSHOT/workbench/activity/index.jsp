@@ -8,19 +8,35 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 	<base href="<%=basePath%>">
 <meta charset="UTF-8">
 
+	<link href="jquery/bs_pagination/jquery.bs_pagination.min.css" type="text/css" rel="stylesheet">
 <link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
 <link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+
 
 <script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+<script type="text/javascript" src="jquery/bs_pagination/en.js"></script>
 
 <script type="text/javascript">
 
 	$(function(){
-
+		pageList(1,10);
+		$(".time").datetimepicker({
+			minView: "month",
+			language:  'zh-CN',
+			format: 'yyyy-mm-dd',
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "bottom-left"
+		});
 		$("#btn1").click(function () {
+
+			// 创建datatime组件 为客户规定格式
+
+
 			$.ajax({
 						url:"workbench/user/userlist.do",
 						type:"get",
@@ -34,7 +50,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							$("#create-marketActivityOwner").html(html);
 							let name1 = "${sessionScope.user.id}";
 							$("#create-marketActivityOwner").val(name1);
-							$("#createActivityModal").modal(true);
+							$("#createActivityModal").modal("show");
 						}
 					}
 
@@ -49,18 +65,104 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						success:function (data) {
 							let html = "<option></option>";
 							$.each(data,function (i,n){
-								html += "<option value='"+n.loginAct+"'>"+n.name+"</option>";
+								html += "<option value='"+n.id+"'>"+n.name+"</option>";
 							})
 							$("#edit-marketActivityOwner").html(html);
-							$("#editActivityModal").modal(true);
+							let name2 = "${sessionScope.user.id}";
+							$("#edit-marketActivityOwner").val(name2);
+							$("#editActivityModal").modal("show");
 						}
 					}
 
 			)
 		})
-		
+
+		$("#save").click(function () {
+			$.ajax({
+				url:"workbench/user/save.do",
+				type:"post",
+				dataType:"json",
+				data:{
+					"owner":$.trim($("#create-marketActivityOwner").val()),
+					"name":$.trim($("#create-marketActivityName").val()),
+					"startDate":$.trim($("#create-startTime").val()),
+					"endDate":$.trim($("#create-endTime").val()),
+					"cost":$.trim($("#create-cost").val()),
+					"description":$.trim($("#create-describe").val())
+				},
+				success:function (data) {
+                      if(data.success){
+						  $("#activityReset")[0].reset();
+						  pageList(1,10);
+						  $("#createActivityModal").modal("hide");
+					  }else{
+                         alert("添加市场活动失败");
+					  }
+				}
+			})
+		})
+
+
+		$("#search-search").click(function () {
+			pageList(1,3);
+		})
+
+
+
+
 	});
-	
+	function pageList(pageNo,pageSize){
+		$.ajax({
+			url:"workbench/user/pagelist.do",
+			dataType:"json",
+			type:"post",
+			data: {
+             "pageNo":pageNo,
+			 "pageSize":pageSize,
+			 "owner":$.trim($("#search-owner").val()),
+			 "name":$.trim($("#search-name").val()),
+		     "startDate":$.trim($("#search-startTime").val()),
+			 "endDate":$.trim($("#search-endTime").val())
+			},
+			success:function(data) {
+				if(data.total>0){
+					let html = "<tr class='active'>";
+					$.each(data.pageList,function (i,n) {
+						html += "<td><input type='checkbox' /></td>";
+						html += "<td><a style='text-decoration: none; cursor: pointer;' onclick=\"window.location.href='workbench/activity/detail.jsp';\">"+n.name+"</a></td>";
+						html +=	"<td>"+n.owner+"</td>";
+						html +=	"<td>"+n.startDate+"</td>";
+						html +=	"<td>"+n.endDate+"</td>";
+						html +=	"</tr>";
+					})
+					$("#table-showData").html(html);
+				}else{
+					alert("傻瓜,表中还没有数据，怎么查")
+				}
+				// 获取总页数
+				let totalPages = data.total%pageSize==0?data.total/pageSize:data.total/pageSize + 1;
+
+				$("#activityPage").bs_pagination({
+					currentPage: pageNo, // 页码
+					rowsPerPage: pageSize, // 每页显示的记录条数
+					maxRowsPerPage: 20, // 每页最多显示的记录条数
+					totalPages: totalPages, // 总页数
+					totalRows: data.total, // 总记录条数
+
+					visiblePageLinks: 3, // 显示几个卡片
+
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+
+					onChangePage : function(event, data){
+						pageList(data.currentPage , data.rowsPerPage);
+					}
+				});
+			}
+		})
+	}
 </script>
 </head>
 <body>
@@ -77,7 +179,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				</div>
 				<div class="modal-body">
 				
-					<form class="form-horizontal" role="form">
+					<form class="form-horizontal" id="activityReset" role="form">
 					
 						<div class="form-group">
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
@@ -92,13 +194,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						</div>
 						
 						<div class="form-group">
-							<label for="create-startTime" class="col-sm-2 control-label">开始日期</label>
+							<label for="create-startTime" class="col-sm-2 control-label ">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-startTime">
+								<input type="text" class="form-control time" id="create-startTime" readonly="readonly">
 							</div>
 							<label for="create-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-endTime">
+								<input type="text" class="form-control time" id="create-endTime" readonly="readonly">
 							</div>
 						</div>
                         <div class="form-group">
@@ -120,7 +222,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button type="button" class="btn btn-primary"  id="save">保存</button>
 				</div>
 			</div>
 		</div>
@@ -155,11 +257,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						<div class="form-group">
 							<label for="edit-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-startTime" value="2020-10-10">
+								<input type="text" class="form-control time" id="edit-startTime" value="2020-10-10" readonly="readonly">
 							</div>
 							<label for="edit-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-endTime" value="2020-10-20">
+								<input type="text" class="form-control time" id="edit-endTime" value="2020-10-20" readonly="readonly">
 							</div>
 						</div>
 						
@@ -207,14 +309,14 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-name">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-owner">
 				    </div>
 				  </div>
 
@@ -222,17 +324,17 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input class="form-control" type="text" id="startTime" />
+					  <input class="form-control time" type="text" id="search-startTime" readonly="readonly" style="background: white"/>
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input class="form-control" type="text" id="endTime">
+					  <input class="form-control time" type="text" id="search-endTime" readonly="readonly" style="background: white">
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="search-search">查询</button>
 				  
 				</form>
 			</div>
@@ -258,8 +360,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<td>结束日期</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr class="active">
+					<tbody id="table-showData">
+						<%--<tr class="active">
 							<td><input type="checkbox" /></td>
 							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail.jsp';">发传单</a></td>
                             <td>zhangsan</td>
@@ -272,44 +374,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                             <td>zhangsan</td>
                             <td>2020-10-10</td>
                             <td>2020-10-20</td>
-                        </tr>
+                        </tr>--%>
 					</tbody>
 				</table>
 			</div>
 			
-			<div style="height: 50px; position: relative;top: 30px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
-				</div>
+			<div style="height: 50px; position: relative;top: 30px;" >
+               <div id="activityPage"></div>
 			</div>
 			
 		</div>

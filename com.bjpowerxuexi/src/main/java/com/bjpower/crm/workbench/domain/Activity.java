@@ -1,14 +1,17 @@
 package com.bjpower.crm.workbench.domain;
 
 public class Activity {
-    private  String id;
-    private  String noteContent;
-    private  String createTime;
-    private  String createBy;
-    private  String editTime;
-    private  String editBy;
-    private  String editFlag ;
-    private  String activityId;
+    private String id;
+    private String owner;
+    private String name;
+    private String startDate;
+    private String endDate;
+    private String cost;
+    private String description;
+    private String createTime;
+    private String createBy;
+    private String editTime;
+    private String editBy;
 
     public String getId() {
         return id;
@@ -18,12 +21,52 @@ public class Activity {
         this.id = id;
     }
 
-    public String getNoteContent() {
-        return noteContent;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setNoteContent(String noteContent) {
-        this.noteContent = noteContent;
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getCost() {
+        return cost;
+    }
+
+    public void setCost(String cost) {
+        this.cost = cost;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getCreateTime() {
@@ -58,33 +101,20 @@ public class Activity {
         this.editBy = editBy;
     }
 
-    public String getEditFlag() {
-        return editFlag;
-    }
-
-    public void setEditFlag(String editFlag) {
-        this.editFlag = editFlag;
-    }
-
-    public String getActivityId() {
-        return activityId;
-    }
-
-    public void setActivityId(String activityId) {
-        this.activityId = activityId;
-    }
-
     @Override
     public String toString() {
-        return "activity{" +
+        return "Activity{" +
                 "id='" + id + '\'' +
-                ", noteContent='" + noteContent + '\'' +
+                ", owner='" + owner + '\'' +
+                ", name='" + name + '\'' +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", cost='" + cost + '\'' +
+                ", description='" + description + '\'' +
                 ", createTime='" + createTime + '\'' +
                 ", createBy='" + createBy + '\'' +
                 ", editTime='" + editTime + '\'' +
                 ", editBy='" + editBy + '\'' +
-                ", editFlag='" + editFlag + '\'' +
-                ", activityId='" + activityId + '\'' +
                 '}';
     }
 }
