@@ -12,4 +12,12 @@ public interface ActivityDao {
     int getPageCount();
 
     List<Activity> getPageUserList(Map<String, Object> pageMap);
+
+    int activityDeleteTotal(String[] ids);
+
+    int activityEdit(Map activityId);
+
+    Activity editacList(String s);
+
+    Activity detailJump(String activityId);
 }

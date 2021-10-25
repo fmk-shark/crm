@@ -38,7 +38,11 @@ public class UserController extends HttpServlet {
             User user =  userService.login(loginuser,loginpwd,ip);
             //异常被其他拦截了，所以程序会继续往下执行  imp被invoke方法调用了，并且把异常给拦截了，catch模块把异常处理了
             //如果user为空，直接转入catch语句内，并往上抛异常。
+            //将登录用户设为当前用户user
+
             request.getSession().setAttribute("user",user);
+
+
             PrintJson.printJsonFlag(response,true);
 
         } catch (Exception e) {

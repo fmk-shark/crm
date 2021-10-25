@@ -4,6 +4,40 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bjpower.crm.workbench.dao.ActivityRemarkDao">
+    <select id="acactivityDeleteDate" resultType="int" >
 
+     select count(*) from tbl_activity_remark
+     where activityId in
+     <foreach collection="array" item="actid" open="(" close=")" separator="," >
+           #{actid}
+     </foreach>
 
+    </select>
+
+    <delete id="activityDeleteCount">
+        delete from tbl_activity_remark
+        where activityId in
+        <foreach collection="array" item="actid" open="(" close=")" separator="," >
+            #{actid}
+        </foreach>
+    </delete>
+
+    <select id="showRemarkListByid" resultType="com.bjpower.crm.workbench.domain.ActivityRemark">
+
+        select * from tbl_activity_remark where activityId = #{activityId}
+
+    </select>
+
+    <delete id="deleteRemark">
+        delete from tbl_activity_remark where id = #{deleteRemarkById}
+    </delete>
+
+    <insert id="saveRemark" parameterType="map">
+        insert into tbl_activity_remark(id,noteContent,createTime,createBy,editFlag,activityId)
+        value(#{id},#{noteContent},#{createTime},#{createBy},#{editFlag},#{activityId})
+    </insert>
+
+    <update id="updataRemark" parameterType="ActivityRemark">
+        UPDATE tbl_activity_remark SET editTime = #{editTime},editBy = #{editBy},editFlag = #{editFlag},noteContent = #{noteContent} where id = #{id}
+    </update>
 </mapper>

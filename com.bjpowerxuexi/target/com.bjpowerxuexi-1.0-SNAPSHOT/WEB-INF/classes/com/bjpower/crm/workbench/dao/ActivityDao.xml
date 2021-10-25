@@ -4,6 +4,40 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bjpower.crm.workbench.dao.ActivityDao">
+    <select id="detailJump" resultType="com.bjpower.crm.workbench.domain.Activity">
+    select
+    a.id,
+    a.name ,
+    u.name as owner,
+    a.startDate ,
+    a.endDate,
+    a.cost,
+    a.description,
+    a.createTime,
+    a.createBy,
+    a.editTime,
+    a.editBy
+
+    from tbl_activity a join tbl_user u on a.owner = u.id where a.id = #{id}
+    </select>
+
+    <select id="editacList" resultType="com.bjpower.crm.workbench.domain.Activity">
+        select * from tbl_activity where id = #{id}
+    </select>
+
+
+    <update id="activityEdit" parameterType="map">
+        UPDATE tbl_activity SET name = #{name}, startDate = #{startDate} ,endDate = #{endDate} ,cost = #{cost} ,description = #{description} ,editTime = #{editTime},editBy = #{editBy} where id = #{id}
+    </update>
+
+    <delete id="activityDeleteTotal">
+        delete from tbl_activity
+        where id in
+        <foreach collection="array" item="actid" open="(" close=")" separator="," >
+            #{actid}
+        </foreach>
+    </delete>
+
     <insert id="activitySave" parameterType="com.bjpower.crm.workbench.domain.Activity">
         insert into tbl_activity(id,owner,name,startDate,endDate,cost,description,createTime,createBy)value(#{id},#{owner},#{name},#{startDate},#{endDate},#{cost},#{description},#{createTime},#{createBy})
     </insert>
@@ -14,6 +48,7 @@
 
     <select id="getPageUserList" resultType="com.bjpower.crm.workbench.domain.Activity">
         select
+            a.id,
             a.name ,
             u.name as owner,
             a.startDate ,
@@ -27,7 +62,7 @@
 
         <where>
             <if test="owner != null and owner != ''">
-               and a.owner like '%' #{owner} '%'
+               and u.name like '%' #{owner} '%'
             </if>
         </where>
 
